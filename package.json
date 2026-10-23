@@ -1,6 +1,6 @@
 {
   "name": "@opotopo/seller-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Клиент Seller API ОПОТОПО на TypeScript: синхронизация позиций каталога",
   "license": "MIT",
   "keywords": [
@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/AdzerKI/seller-api-typescript"
+    "url": "git+https://github.com/AdzerKI/seller-api-typescript.git"
   },
   "type": "module",
   "exports": {

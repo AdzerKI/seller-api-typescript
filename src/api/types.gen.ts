@@ -4,7 +4,7 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
-export type Webhooks = PostAdvertisementCreatedWebhookRequest | PostAdvertisementUpdatedWebhookRequest | PostAdvertisementPublishedWebhookRequest | PostAdvertisementPriceChangedWebhookRequest | PostAdvertisementArchivedWebhookRequest | PostAdvertisementDeletedWebhookRequest | PostAdvertisementImageRejectedWebhookRequest | PostDealInquiryCreatedWebhookRequest | PostModerationApprovedWebhookRequest | PostModerationRejectedWebhookRequest | PostChatMessageSentWebhookRequest | PostOrderPurchaseCreatedWebhookRequest | PostOrderPurchaseRevokedWebhookRequest;
+export type Webhooks = PostAdvertisementCreatedWebhookRequest | PostAdvertisementUpdatedWebhookRequest | PostAdvertisementPublishedWebhookRequest | PostAdvertisementPriceChangedWebhookRequest | PostAdvertisementArchivedWebhookRequest | PostAdvertisementDeletedWebhookRequest | PostAdvertisementImageRejectedWebhookRequest | PostDealInquiryCreatedWebhookRequest | PostModerationApprovedWebhookRequest | PostModerationRejectedWebhookRequest | PostChatMessageSentWebhookRequest | PostOrderPurchaseCreatedWebhookRequest | PostOrderPurchaseRevokedWebhookRequest | PostOrderFulfillmentStatusChangedWebhookRequest;
 
 export type ActiveVersion = 'ORIGINAL' | 'PROCESSED';
 
@@ -92,6 +92,12 @@ export type AttributeValueDto = {
 export type AttributeValueLevel = 'REFERENCE' | 'INSTANCE';
 
 export type BarcodeType = 'EAN13' | 'EAN8' | 'UPC_A' | 'CODE128' | 'CODE39' | 'ITF14' | 'QR' | 'DATA_MATRIX' | 'INTERNAL';
+
+export type CancelFulfillmentRequestDto = {
+    reason?: string | null;
+};
+
+export type CarrierPointType = 'PICKUP_POINT' | 'POSTAMAT' | 'POST_OFFICE' | 'TERMINAL';
 
 export type CategoryAttributeDto = {
     id: string;
@@ -194,6 +200,8 @@ export type DataDeliveryMaskDto = {
     replacedAt?: string;
 };
 
+export type DataDeliveryMethod = 'STOCK' | 'MANUAL';
+
 export type DataDeliveryRequestDto = {
     value?: string | null;
     replacedDeliveryId?: string | null;
@@ -209,6 +217,27 @@ export type DealInquiryCreatedWebhookData = {
         [key: string]: Array<string>;
     };
     occurredAt: string;
+};
+
+export type DeliveryDocumentType = 'LABEL' | 'WAYBILL';
+
+export type DispatchFulfillmentRequestDto = {
+    carrierName?: string | null;
+    trackingNumber?: string | null;
+    trackingUrl?: string | null;
+    senderAddressId?: string | null;
+    places?: Array<DispatchPlaceDto> | null;
+    dropOffPointId?: string | null;
+};
+
+export type DispatchPlaceDto = {
+    parcel: ParcelDto;
+    lines: Array<DispatchPlaceLineDto>;
+};
+
+export type DispatchPlaceLineDto = {
+    lineId: string;
+    quantity: number;
 };
 
 export type EntityStatus = 'ACCEPTED' | 'ACTIVE' | 'BLOCKED' | 'CANCELLED' | 'DELETED' | 'PENDING' | 'PENDING_VERIFICATION' | 'PENDING_MODERATION' | 'REJECTED' | 'DRAFT' | 'ARCHIVED' | 'CLOSED' | 'EXPIRED' | 'DONE' | 'FAILED';
@@ -241,6 +270,70 @@ export type FileResponseDto = {
 export type FileScanStatus = 'UPLOADING' | 'PENDING' | 'CLEAN' | 'QUARANTINED' | 'REJECTED';
 
 export type FileType = 'IMAGE' | 'PDF' | 'DOCUMENT' | 'BLUEPRINT' | 'THREE_D_MODEL' | 'ARCHIVE' | 'VIDEO' | 'AUDIO' | 'OTHER';
+
+export type FulfillmentAction = 'DISPATCH' | 'DELIVER_DATA' | 'RECEIVE' | 'CANCEL';
+
+export type FulfillmentItemDto = {
+    id: string;
+    advertisementId: string;
+    advertisementNumber?: number;
+    title?: string;
+    variantId?: string;
+    variantName?: string;
+    sku?: string;
+    quantity: number;
+    quantityUnit: QuantityUnit;
+    amount: number;
+    dataDelivery?: DataDeliveryMethod;
+    dataDeliveries: Array<DataDeliveryMaskDto>;
+    buyerDataLabel?: string;
+    buyerData?: string;
+};
+
+export type FulfillmentMethod = 'COURIER' | 'SELLER_PICKUP' | 'CARRIER_DELIVERY' | 'CARRIER_POINT' | 'DATA';
+
+export type FulfillmentResponseDto = {
+    id: string;
+    orderId: string;
+    buyerId: string;
+    sellerId: string;
+    organizationId?: string;
+    sellerName?: string;
+    method: FulfillmentMethod;
+    status: FulfillmentStatus;
+    amount: number;
+    currency: Currency;
+    deliveryAddressLine?: string;
+    deliveryPostalCode?: string;
+    recipientName?: string;
+    recipientPhone?: string;
+    deliveryComment?: string;
+    pickupLocationId?: string;
+    pickupLocationName?: string;
+    pickupAddressLine?: string;
+    carrierPointId?: string;
+    carrierPointCity?: string;
+    carrierPointName?: string;
+    carrierPointAddressLine?: string;
+    carrierPointType?: CarrierPointType;
+    tariffCarrierName?: string;
+    deliveryPrice?: number;
+    shipmentId?: string;
+    carrierName?: string;
+    trackingNumber?: string;
+    dispatchDueAt?: string;
+    dispatchOverdue: boolean;
+    dispatchedAt?: string;
+    receivedAt?: string;
+    autoConfirmAt?: string;
+    cancelledAt?: string;
+    cancellationReason?: string;
+    refundPending: boolean;
+    createdAt: string;
+    trackingRequired: boolean;
+    availableActions: Array<FulfillmentAction>;
+    items: Array<FulfillmentItemDto>;
+};
 
 export type FulfillmentStatus = 'PENDING' | 'SHIPPED' | 'READY_FOR_PICKUP' | 'DELIVERED' | 'RECEIVED' | 'CANCELLED';
 
@@ -275,7 +368,7 @@ export type LicenseKeyVerifyRequestDto = {
     key: string;
 };
 
-export type MessageType = 'TEXT' | 'FILE' | 'IMAGE';
+export type MessageType = 'TEXT' | 'FILE' | 'IMAGE' | 'CONTACTS';
 
 export type Model3dOrientationDto = {
     rollDeg: number;
@@ -342,6 +435,13 @@ export type MovementResponseDto = {
 
 export type OfferType = 'PRODUCT' | 'RFQ' | 'RENT' | 'SERVICE' | 'VACANCY' | 'RESUME';
 
+export type OrderFulfillmentStatusChangedWebhookData = {
+    fulfillmentId: string;
+    orderId: string;
+    status: FulfillmentStatus;
+    changedAt: string;
+};
+
 export type OrderPurchaseCreatedWebhookData = {
     purchaseId: string;
     orderId: string;
@@ -393,6 +493,16 @@ export type PageResponseDtoAttributeValueDto = {
     hasPrevious: boolean;
 };
 
+export type PageResponseDtoFulfillmentResponseDto = {
+    content: Array<FulfillmentResponseDto>;
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+};
+
 export type PageResponseDtoPositionResponseDto = {
     content: Array<PositionResponseDto>;
     page: number;
@@ -411,6 +521,13 @@ export type PageResponseDtoSellerAdResponseDto = {
     totalPages: number;
     hasNext: boolean;
     hasPrevious: boolean;
+};
+
+export type ParcelDto = {
+    weightGrams: number;
+    lengthCm: number;
+    widthCm: number;
+    heightCm: number;
 };
 
 export type PositionRequestDto = {
@@ -458,6 +575,8 @@ export type PositionResponseDto = {
 export type PriceUnit = 'PIECE' | 'HOUR' | 'DAY' | 'WEEK' | 'MONTH' | 'YEAR' | 'KG' | 'TON' | 'METER' | 'SQUARE_METER' | 'CUBIC_METER' | 'LITER' | 'SET' | 'PROJECT' | 'UNIT' | 'SEAT';
 
 export type PurchaseDelivery = 'GOODS' | 'DIGITAL' | 'REPOSITORY' | 'DATA';
+
+export type QuantityUnit = 'PIECE' | 'KG' | 'TON' | 'METER' | 'SQUARE_METER' | 'CUBIC_METER' | 'LITER' | 'SET' | 'UNIT' | 'SEAT';
 
 export type RejectionType = 'INVALID_DOCUMENTS' | 'INAPPROPRIATE_CONTENT' | 'SPAM' | 'FRAUD' | 'MISLEADING' | 'KEYWORD_STUFFING' | 'OFFENSIVE_LANGUAGE' | 'DUPLICATE' | 'LOW_QUALITY' | 'POLICY_VIOLATION' | 'COPYRIGHT_VIOLATION' | 'OVERLAY' | 'FILE_SCAN_REJECTED' | 'OTHER';
 
@@ -1079,6 +1198,50 @@ export type InventorySellerInventoryGetPositionResponses = {
 
 export type InventorySellerInventoryGetPositionResponse = InventorySellerInventoryGetPositionResponses[keyof InventorySellerInventoryGetPositionResponses];
 
+export type LogisticsSellerApiDocumentData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query: {
+        type: DeliveryDocumentType;
+    };
+    url: '/rest/v1/logistics/seller/shipments/{id}/document';
+};
+
+export type LogisticsSellerApiDocumentResponses = {
+    /**
+     * OK
+     */
+    200: string;
+};
+
+export type LogisticsSellerApiDocumentResponse = LogisticsSellerApiDocumentResponses[keyof LogisticsSellerApiDocumentResponses];
+
+export type OrderSellerFulfillmentApiDispatchData = {
+    body: DispatchFulfillmentRequestDto;
+    headers: {
+        /**
+         * Ключ идемпотентности: повтор с тем же ключом и телом отдаёт ответ первого запроса, тот же ключ с другим телом — отказ; новое действие — новый ключ.
+         */
+        'Idempotency-Key': string;
+    };
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/rest/v1/order/seller/fulfillments/{id}/dispatch';
+};
+
+export type OrderSellerFulfillmentApiDispatchResponses = {
+    /**
+     * OK
+     */
+    200: FulfillmentResponseDto;
+};
+
+export type OrderSellerFulfillmentApiDispatchResponse = OrderSellerFulfillmentApiDispatchResponses[keyof OrderSellerFulfillmentApiDispatchResponses];
+
 export type OrderSellerFulfillmentApiDeliverDataData = {
     body: DataDeliveryRequestDto;
     headers: {
@@ -1103,6 +1266,30 @@ export type OrderSellerFulfillmentApiDeliverDataResponses = {
 
 export type OrderSellerFulfillmentApiDeliverDataResponse = OrderSellerFulfillmentApiDeliverDataResponses[keyof OrderSellerFulfillmentApiDeliverDataResponses];
 
+export type OrderSellerFulfillmentApiCancelData = {
+    body: CancelFulfillmentRequestDto;
+    headers: {
+        /**
+         * Ключ идемпотентности: повтор с тем же ключом и телом отдаёт ответ первого запроса, тот же ключ с другим телом — отказ; новое действие — новый ключ.
+         */
+        'Idempotency-Key': string;
+    };
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/rest/v1/order/seller/fulfillments/{id}/cancel';
+};
+
+export type OrderSellerFulfillmentApiCancelResponses = {
+    /**
+     * OK
+     */
+    200: FulfillmentResponseDto;
+};
+
+export type OrderSellerFulfillmentApiCancelResponse = OrderSellerFulfillmentApiCancelResponses[keyof OrderSellerFulfillmentApiCancelResponses];
+
 export type OrderLicenseKeyVerifyData = {
     body: LicenseKeyVerifyRequestDto;
     path?: never;
@@ -1118,6 +1305,47 @@ export type OrderLicenseKeyVerifyResponses = {
 };
 
 export type OrderLicenseKeyVerifyResponse = OrderLicenseKeyVerifyResponses[keyof OrderLicenseKeyVerifyResponses];
+
+export type OrderSellerFulfillmentApiListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        organizationId?: string;
+        status?: Array<FulfillmentStatus>;
+        from?: string;
+        to?: string;
+        page?: number;
+        size?: number;
+    };
+    url: '/rest/v1/order/seller/fulfillments';
+};
+
+export type OrderSellerFulfillmentApiListResponses = {
+    /**
+     * OK
+     */
+    200: PageResponseDtoFulfillmentResponseDto;
+};
+
+export type OrderSellerFulfillmentApiListResponse = OrderSellerFulfillmentApiListResponses[keyof OrderSellerFulfillmentApiListResponses];
+
+export type OrderSellerFulfillmentApiGetByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/rest/v1/order/seller/fulfillments/{id}';
+};
+
+export type OrderSellerFulfillmentApiGetByIdResponses = {
+    /**
+     * OK
+     */
+    200: FulfillmentResponseDto;
+};
+
+export type OrderSellerFulfillmentApiGetByIdResponse = OrderSellerFulfillmentApiGetByIdResponses[keyof OrderSellerFulfillmentApiGetByIdResponses];
 
 export type PostAdvertisementCreatedWebhookPayload = {
     type: 'advertisement.created';
@@ -1284,6 +1512,19 @@ export type PostOrderPurchaseRevokedWebhookPayload = {
 export type PostOrderPurchaseRevokedWebhookRequest = {
     body: PostOrderPurchaseRevokedWebhookPayload;
     key: 'order.purchase.revoked';
+    path?: never;
+    query?: never;
+};
+
+export type PostOrderFulfillmentStatusChangedWebhookPayload = {
+    type: 'order.fulfillment.status.changed';
+    timestamp: string;
+    data: OrderFulfillmentStatusChangedWebhookData;
+};
+
+export type PostOrderFulfillmentStatusChangedWebhookRequest = {
+    body: PostOrderFulfillmentStatusChangedWebhookPayload;
+    key: 'order.fulfillment.status.changed';
     path?: never;
     query?: never;
 };

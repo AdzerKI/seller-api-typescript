@@ -11,6 +11,6 @@ export {
 export type { ClientConfig } from './client-config.ts';
 export { ItemBuilder } from './item-builder.ts';
 export type { ItemState, ItemStore } from './item-store.ts';
-export { SellerApiClient } from './seller-api-client.ts';
+export { SellerApiClient, type FulfillmentsQuery } from './seller-api-client.ts';
 export { SyncReport, type SyncFailure, type SyncGitSource } from './sync-report.ts';
 export { Synchronizer, type SyncOptions } from './synchronizer.ts';
