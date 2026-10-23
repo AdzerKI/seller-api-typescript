@@ -1,0 +1,43 @@
+{
+  "name": "@opotopo/seller-api",
+  "version": "1.0.0",
+  "description": "Клиент Seller API ОПОТОПО на TypeScript: синхронизация позиций каталога",
+  "license": "MIT",
+  "keywords": [
+    "opotopo",
+    "seller-api",
+    "catalog",
+    "marketplace"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdzerKI/seller-api-typescript"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check": "tsc --noEmit",
+    "generate": "openapi-ts",
+    "test": "node --test tests/*.test.ts"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "0.99.0",
+    "@types/node": "^24.19.2",
+    "typescript": "^6.0.3"
+  },
+  "overrides": {
+    "js-yaml": "^4.3.2"
+  }
+}
